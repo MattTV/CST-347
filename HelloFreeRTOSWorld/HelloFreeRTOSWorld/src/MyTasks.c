@@ -8,30 +8,35 @@
 #include <asf.h>
 #include <stdbool.h>
 
+#include <FreeRTOS.h>
+#include <task.h>
+
 #include "MyTasks.h"
 
 /**********************************************************************
-* Purpose: If the button is pressed, light the LED. Else, turn it off.
+* Purpose: Toggle the LED every 500 ms
 *
 * Precondition:
 *   None
 *
 * Postcondition:
-*	None
+*	LED will be toggled on or off
 *
 ************************************************************************/
 void MyButtonTask(void* pvParameters)
 {
+	(void)pvParameters;
+	
 	while(true)
 	{
-		// Is the button pressed?
-		if (ioport_get_pin_level(BUTTON_0_PIN) == BUTTON_0_ACTIVE)
-		{
-			ioport_set_pin_level(LED_0_PIN, LED_0_ACTIVE);
-		}
-		else
-		{
-			ioport_set_pin_level(LED_0_PIN, LED_0_INACTIVE);
-		}
+		const TickType_t delay = 500 / portTICK_PERIOD_MS;	// Delay 500 ms
+
+		ioport_set_pin_level(LED_0_PIN, LED_0_ACTIVE);		// Turn LED on
+
+		vTaskDelay(delay);									// Wait 500 ms
+
+		ioport_set_pin_level(LED_0_PIN, LED_0_INACTIVE);	// Turn LED off
+		
+		vTaskDelay(delay);									// Wait 500 ms
 	}
 }
