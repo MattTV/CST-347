@@ -34,9 +34,12 @@
 
 // My Includes
 #include "MyTasks.h"
+#include "LEDDriver.h"
+#include "ButtonDriver.h"
+#include "OITExpansionBoard.h"
 
 // Defines
-#if( BOARD == SAM4E_XPLAINED_PRO)
+#if(BOARD == SAM4E_XPLAINED_PRO)
 	// Used to place heap
 	#define mainHEAP_START				_estack
 	#define mainRAM_LENGTH				0x00020000	// 128 KB internal SRAM
@@ -68,10 +71,20 @@ int main(void)
 	// Initialize the board
 	prvMiscInitialization();
 	
-	// Add task to the scheduler
+	// Add heartbeat to the scheduler
 	xTaskCreate(
-		MyButtonTask,				// Function called by task
-		"My Button Task",			// Task name
+		TaskHeartbeat,			// Function called by task
+		"Heartbeat",				// Task name
+		configMINIMAL_STACK_SIZE,	// Task stack size
+		NULL,						// Any parameters passed to task
+		1,							// Task priority
+		NULL						// Place to store task handle
+	);
+	
+	// Add system control to the scheduler
+	xTaskCreate(
+		TaskSystemControl,			// Function called by task
+		"System Control",			// Task name
 		configMINIMAL_STACK_SIZE,	// Task stack size
 		NULL,						// Any parameters passed to task
 		1,							// Task priority
@@ -108,6 +121,11 @@ static void prvMiscInitialization(void)
 	
 	pmc_enable_periph_clk(ID_PIOA);
 	pmc_enable_periph_clk(ID_PIOB);
+	
+	OITExpansionBoardInit();
+	
+	initializeLEDDriver();
+	initializeButtonDriver();
 }
 
 /**********************************************************************

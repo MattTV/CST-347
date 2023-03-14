@@ -20,10 +20,10 @@
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
     <ProgFlashFromRam>true</ProgFlashFromRam>
-    <RamSnippetAddress />
+    <RamSnippetAddress>0x20000000</RamSnippetAddress>
     <UncachedRange />
     <preserveEEPROM>true</preserveEEPROM>
-    <OverrideVtorValue />
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
     <BootSegment>2</BootSegment>
     <ResetRule>0</ResetRule>
     <eraseonlaunchrule>0</eraseonlaunchrule>
@@ -456,6 +456,12 @@
     <Folder Include="src\FreeRTOS\portable\MemMang" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\ButtonDriver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ButtonDriver.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\FreeRTOSConfig.h">
       <SubType>compile</SubType>
     </Compile>
@@ -531,10 +537,25 @@
     <Compile Include="src\FreeRTOS\timers.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\LEDDriver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\LEDDriver.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\MyTasks.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\MyTasks.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\OITExpansionBoard.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\OITExpansionBoard.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\OITExpansionBoardDefines.h">
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\asf.h">
