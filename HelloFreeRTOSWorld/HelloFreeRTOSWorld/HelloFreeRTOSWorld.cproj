@@ -310,6 +310,7 @@
       <Value>ARM_MATH_CM4=true</Value>
       <Value>printf=iprintf</Value>
       <Value>__SAM4E16E__</Value>
+      <Value>OIT_4LED_4BTN_BOARD_EXT1</Value>
     </ListValues>
   </armgcc.compiler.symbols.DefSymbols>
   <armgcc.compiler.directories.IncludePaths>
@@ -335,7 +336,6 @@
       <Value>../src/FreeRTOS/portable/GCC/ARM_CM4F</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
-  <armgcc.compiler.optimization.level>Optimize (-O1)</armgcc.compiler.optimization.level>
   <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
   <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
   <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>

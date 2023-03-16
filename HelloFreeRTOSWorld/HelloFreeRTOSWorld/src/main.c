@@ -7,16 +7,18 @@
 
 /*************************************************************
 *
-* Lab: Lab 1 – Hello FreeRTOS
+* Lab: Lab 2
 *
 * Overview:
-* This program lights an LED while a button is pressed.
+* Using an expansion board, this program will cause three LEDs
+*	to blink, pause, and resume depending on button presses.
 *
 * Input:
-* BTN 0 Press
+* BTN 1-3
 *
 * Output:
-* LED 0 Lighting Up if BTN 0 Pressed
+* LED 0 Heartbeat
+* LED 1-3
 *
 ************************************************************/
 
@@ -57,7 +59,7 @@ static void prvInitializeHeap(void);
 extern char _estack;
 
 /**********************************************************************
-* Purpose: Create the button task and start the scheduler
+* Purpose: Create the heartbeat and control tasks and start the scheduler
 *
 * Precondition:
 *   None
@@ -101,7 +103,7 @@ int main(void)
 }	
 
 /**********************************************************************
-* Purpose: Initialize the SAM board, setting up clock, board, heap, and peripherals
+* Purpose: Initialize the EXT and SAM board, setting up clock, board, heap, and peripherals
 *
 * Precondition:
 *   None
@@ -121,8 +123,6 @@ static void prvMiscInitialization(void)
 	
 	pmc_enable_periph_clk(ID_PIOA);
 	pmc_enable_periph_clk(ID_PIOB);
-	
-	OITExpansionBoardInit();
 	
 	initializeLEDDriver();
 	initializeButtonDriver();

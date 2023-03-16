@@ -2,7 +2,7 @@
 * Author:			Matt Volpe
 * Filename:			FreeRTOSConfig.h
 * Date Created:		1/10/23
-* Modifications:	
+* Modifications:	3/15/23	Added support for task suspend, resume, and delete
 **************************************************************/
 
 #ifndef FREERTOSCONFIG_H_
@@ -61,9 +61,9 @@
 to exclude the API function. */
 #define INCLUDE_vTaskPrioritySet						0
 #define INCLUDE_uxTaskPriorityGet						0
-#define INCLUDE_vTaskDelete								0
+#define INCLUDE_vTaskDelete								1
 #define INCLUDE_vTaskCleanUpResources					0
-#define INCLUDE_vTaskSuspend							0
+#define INCLUDE_vTaskSuspend							1
 #define INCLUDE_vTaskDelayUntil							0
 #define INCLUDE_vTaskDelay								1
 #define INCLUDE_xTaskGetCurrentTaskHandle				0

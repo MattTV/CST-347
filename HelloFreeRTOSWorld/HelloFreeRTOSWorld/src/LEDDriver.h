@@ -1,9 +1,9 @@
-/*
- * LEDDriver.h
- *
- * Created: 3/8/2023 3:57:26 PM
- *  Author: mattv
- */ 
+/*************************************************************
+* Author:			Matt Volpe
+* Filename:			LEDDriver.h
+* Date Created:		3/8/23
+* Modifications:
+**************************************************************/
 
 #include <stdint.h>
 
