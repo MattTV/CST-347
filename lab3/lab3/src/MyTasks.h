@@ -16,10 +16,10 @@ typedef enum
 
 TaskHandle_t mainTasks[3];
 QueueHandle_t qLeds[3];
-Uart uart;
 
 void TaskHeartbeat(void* pvParameters);
 void TaskLED(void* pvParameters);
+void TaskModifiedLED(void* pvParameters);
 void TaskMainControl(void* pvParameters);
 void TaskUART(void* pvParameters);
 

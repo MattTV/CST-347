@@ -84,30 +84,23 @@ int main(void)
 		NULL						// Place to store task handle
 	);
 	
-	// Add each control task to the scheduler
+	xTaskCreate(
+		TaskUART,
+		"UART Task",
+		configMINIMAL_STACK_SIZE,
+		NULL,
+		6,
+		NULL
+	);
+	
+	// Add the control task to the scheduler
 	xTaskCreate(
 		TaskMainControl,
-		"TaskMainControl 1",
+		"TaskMainControl",
 		configMINIMAL_STACK_SIZE,
-		(void*)1,
-		1,
+		NULL,
+		3,
 		&mainTasks[0]
-	);
-	xTaskCreate(
-		TaskMainControl,
-		"TaskMainControl 2",
-		configMINIMAL_STACK_SIZE,
-		(void*)2,
-		1,
-		&mainTasks[1]
-	);
-	xTaskCreate(
-		TaskMainControl,
-		"TaskMainControl 3",
-		configMINIMAL_STACK_SIZE,
-		(void*)3,
-		1,
-		&mainTasks[2]
 	);
 
 	// Create corresponding LED task
@@ -116,16 +109,16 @@ int main(void)
 		"LED",						// Task name
 		configMINIMAL_STACK_SIZE,	// Task stack size
 		(void*)1,					// Any parameters passed to task
-		1,							// Task priority
+		6,							// Task priority
 		NULL						// Place to store task handle
 	);
 	// Create corresponding LED task
-		xTaskCreate(
-		TaskLED,					// Function called by task
+	xTaskCreate(
+		TaskModifiedLED,					// Function called by task
 		"LED",						// Task name
 		configMINIMAL_STACK_SIZE,	// Task stack size
 		(void*)2,					// Any parameters passed to task
-		1,							// Task priority
+		5,							// Task priority
 		NULL						// Place to store task handle
 	);
 	// Create corresponding LED task
@@ -134,19 +127,10 @@ int main(void)
 		"LED",						// Task name
 		configMINIMAL_STACK_SIZE,	// Task stack size
 		(void*)3,					// Any parameters passed to task
-		1,							// Task priority
+		4,							// Task priority
 		NULL						// Place to store task handle
 	);
 	
-	xTaskCreate(
-		TaskUART,
-		"UART Task",
-		configMINIMAL_STACK_SIZE,
-		NULL,
-		1,
-		NULL
-	);
-
 	// Start the scheduler
 	vTaskStartScheduler();
 
@@ -296,8 +280,8 @@ static void initQueues()
 {
 	// LED Queues
 	for (uint8_t i = 0; i < 3; i++)
-		qLeds[i] = xQueueCreate(5, sizeof(LEDAction));
+		qLeds[i] = xQueueCreate(20, sizeof(LEDAction));
 	
 	// UART Queue
-	qUart = xQueueCreate(5, 51);
+	qUart = xQueueCreate(20, 50);
 }

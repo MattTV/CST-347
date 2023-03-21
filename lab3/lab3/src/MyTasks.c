@@ -52,7 +52,7 @@ void TaskHeartbeat(void* pvParameters)
 *
 * Postcondition:
 *	LED will be toggled on or off
-*	Frequency wil lbe increased or decreased
+*	Frequency will be increased or decreased
 *
 ************************************************************************/
 void TaskLED(void* pvParameters)
@@ -68,6 +68,23 @@ void TaskLED(void* pvParameters)
 	
 	while (true)
 	{
+		// Introduce Task
+		switch (led)
+		{
+			case 1:
+				if (xQueueSendToBack(qUart, (void*)"LED 1 STARTING\r\n", 0) != pdPASS)
+				{ }
+				break;
+			case 2:
+				if (xQueueSendToBack(qUart, (void*)"LED 2 STARTING\r\n", 0) != pdPASS)
+				{ }
+				break;
+			case 3:
+				if (xQueueSendToBack(qUart, (void*)"LED 3 STARTING\r\n", 0) != pdPASS)
+				{ }
+				break;
+		}
+		
 		// Only if a message is waiting
 		while (uxQueueMessagesWaiting(qLeds[led - 1]))
 		{
@@ -95,8 +112,90 @@ void TaskLED(void* pvParameters)
 		// Toggle the LED
 		toggleLED(led);
 		
+		switch (led)
+		{
+			case 1:
+			if (xQueueSendToBack(qUart, (void*)"LED 1 BLOCKING\r\n", 0) != pdPASS)
+			{ }
+			break;
+			case 2:
+			if (xQueueSendToBack(qUart, (void*)"LED 2 BLOCKING\r\n", 0) != pdPASS)
+			{ }
+			break;
+			case 3:
+			if (xQueueSendToBack(qUart, (void*)"LED 3 BLOCKING\r\n", 0) != pdPASS)
+			{ }
+			break;
+		}
+		
 		// Wait delay
 		vTaskDelay(delay);
+	}
+}
+
+/**********************************************************************
+* Purpose: Toggle the LEDs and adjust frequency when a message is sent using a different method
+*
+* Precondition:
+*   None
+*
+* Postcondition:
+*	LED will be toggled on or off
+*	Frequency will be increased or decreased
+*
+************************************************************************/
+void TaskModifiedLED(void* pvParameters)
+{
+	// Extract the LED number
+	uint8_t led = (uint8_t)pvParameters;
+	portTickType xStartTime;
+		
+	while (true)
+	{
+		// Introduce Task
+		switch (led)
+		{
+			case 1:
+				if (xQueueSendToBack(qUart, (void*)"MOD LED 1 STARTING\r\n", 0) != pdPASS)
+				{ }
+				break;
+			case 2:
+				if (xQueueSendToBack(qUart, (void*)"MOD LED 2 STARTING\r\n", 0) != pdPASS)
+				{ }
+				break;
+			case 3:
+				if (xQueueSendToBack(qUart, (void*)"MOD LED 3 STARTING\r\n", 0) != pdPASS)
+				{ }
+			break;
+		}
+		
+		// Note the time before entering the while loop.  xTaskGetTickCount() is a FreeRTOS API function.
+		xStartTime = xTaskGetTickCount();
+
+		// Loop until pxTaskParameters->xToggleRate ticks have
+		while ((xTaskGetTickCount() - xStartTime) < 200)
+		{
+			taskYIELD();
+		}
+
+		// Toggle the LED
+		toggleLED(led);
+		
+		switch (led)
+		{
+			case 1:
+			if (xQueueSendToBack(qUart, (void*)"MOD LED 1 BLOCKING\r\n", 0) != pdPASS)
+			{ }
+			break;
+			case 2:
+			if (xQueueSendToBack(qUart, (void*)"MOD LED 2 BLOCKING\r\n", 0) != pdPASS)
+			{ }
+			break;
+			case 3:
+			if (xQueueSendToBack(qUart, (void*)"MOD LED 3 BLOCKING\r\n", 0) != pdPASS)
+			{ }
+			break;
+		}
 	}
 }
 
@@ -109,78 +208,50 @@ void TaskLED(void* pvParameters)
 * Postcondition:
 *	If button 1 is pressed, decrease the delay
 *	If button 2 is pressed, increase the delay
-*	If button 3 is pressed, move control to the next LED (Suspend and Resume appropriate task)
+*	If button 3 is pressed, move control to the next LED
 *
 ************************************************************************/
 void TaskMainControl(void* pvParameters)
 {
-	// Extract the LED number
-	uint8_t led = (uint8_t)pvParameters;
-
-	if (led == 1)
-	{
-		vTaskSuspend(mainTasks[1]);
-		vTaskSuspend(mainTasks[2]);
-	}	
-
+	uint8_t led = 1;
+	
 	// Set delay to 100ms
 	const TickType_t delay = 100 / portTICK_PERIOD_MS;
 
 	LEDAction decreaseTime = decrease;
 	LEDAction increaseTime = increase;
 
-	
-	
 	while (true)
 	{
+		// Announce function start
+		if (xQueueSendToBack(qUart, (void*)"MainControl Starting\r\n", 0) != pdPASS)
+		{ }
+		
 		if (readButton(1))
 		{
 			// Send a message to decrease the time
 			if (xQueueSendToBack(qLeds[led - 1], (void*)&decreaseTime, 0) != pdPASS)
-			{
-				
-			}
+			{ }
 		}
 		
 		if (readButton(2))
 		{
 			// Send a message to increase the time
 			if (xQueueSendToBack(qLeds[led - 1], (void*)&increaseTime, 0) != pdPASS)
-			{
-
-			}
+			{ }
 		}
 		
 		if (readButton(3))
 		{
-			// Resume the next LED (wrapping at 3) and suspend this task
-			switch (led)
-			{
-				case 1:
-					if (xQueueSendToBack(qUart, (void*)"LED 2 IS NOW ACTIVE\r\n", 0) != pdPASS)
-					{
-
-					}
-					vTaskResume(mainTasks[1]);
-					break;
-				case 2:
-					if (xQueueSendToBack(qUart, (void*)"LED 3 IS NOW ACTIVE\r\n", 0) != pdPASS)
-					{
-
-					}
-					vTaskResume(mainTasks[2]);
-					break;
-				case 3:
-					if (xQueueSendToBack(qUart, (void*)"LED 1 IS NOW ACTIVE\r\n", 0) != pdPASS)
-					{
-
-					}
-					vTaskResume(mainTasks[0]);
-					break;
-			}
+			led++;
 			
-			vTaskSuspend(NULL);
+			if (led >= 4)
+				led = 1;
 		}
+		
+		// Announce blocking
+		if (xQueueSendToBack(qUart, (void*)"MainControl Blocking\r\n", 0) != pdPASS)
+		{ }
 		
 		vTaskDelay(delay);
 	}
